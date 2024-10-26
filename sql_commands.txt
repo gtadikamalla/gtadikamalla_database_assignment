@@ -4,7 +4,7 @@ create table rep (rep_num char(2) primary key, last_name char(15), first_name ch
 create table customer (customer_num char(3) primary key, customer_name char(35) not null, street char(15), city char(15), state char(2),
 zip char(5), balance decimal(8,2), credit_limit decimal(8,2), rep_num char(2) primary key customer_num);
 
-insert into rep values ('20','Kaiser','Valerie','624 Randall','Grove','FL','33321',20542.50,0.05); 
+insert into rep values ('20','Tadikamalla','Gangadhar','624 Randall','Grove','FL','33321',20542.50,0.05); 
 insert into rep values ('35','Hull','Richard','532 Jackson','Sheldon','FL','33553',39216.00,0.07);
 insert into rep values ('65','Perez','Juan','1626 Taylor','Fillmore','FL','33336',23487.00,0.05);
 
