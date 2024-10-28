@@ -14,7 +14,9 @@ while True:
             Q to quit the application
             """
     choice = input(prompt)
-    if choice in 'Bb':
+    if choice in '':
+        print('Input should not be empty.')
+    elif choice in 'Bb':
         file_name = input('Enter the database file name: ')
         connection = functions.create_database_file(file_name)
     elif choice in 'Pp':
