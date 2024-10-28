@@ -22,7 +22,7 @@ def create_rep_table(database_connectiion):
     except sqlite3.Error as e:
         print(e)
     else:
-        print('Table is created')
+        print('Rep table is created')
 
     try:
         insert_sql=["insert into rep values ('20','Tadikamalla','Gangadhar','624 Randall','Grove','FL','33321',20542.50,0.05);",
@@ -34,7 +34,7 @@ def create_rep_table(database_connectiion):
     except sqlite3.Error as e:
         print(e)
     else:
-        print('Alls rows are updated.')
+        print('Alls rows are updated to rep table.')
     pass
 
 def create_customer_table(database_connectiion):
@@ -49,7 +49,7 @@ zip char(5), balance decimal(8,2), credit_limit decimal(8,2), rep_num char(2),FO
     except sqlite3.Error as e:
         print(e)
     else:
-        print('Table is created')
+        print('Customer table is created')
 
     try:
         insert_sql=["insert into customer values ('148','Al''s Appliance and Sport','2837 Greenway','Fillmore','FL','33336',6550.00,7500.00,'20');",
@@ -67,7 +67,7 @@ zip char(5), balance decimal(8,2), credit_limit decimal(8,2), rep_num char(2),FO
     except sqlite3.Error as e:
         print(e)
     else:
-        print('Alls rows are updated.')
+        print('Alls rows are updated to customer table.')
     pass
 def insert_a_customer_record(database_connectiion):
     #Create a function that prompts the user for a rep number. 
@@ -118,6 +118,8 @@ def query_rep_table(database_connection):
         result=cursor.fetchone()
         if result:
             print(result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8])
+        else:
+            print(f'{rep_num} is not found in table.')
     except sqlite3.Error as e:
         print(e)   
     pass
@@ -142,7 +144,7 @@ def update_rep_table(database_connection):
                 return
 
             if 0.0 <= new_commission <= 0.20:
-                update_query = "UPDATE rep SET commission = ? WHERE rep_num = ?"
+                update_query = "UPDATE rep SET rate = ? WHERE rep_num = ?"
                 cursor.execute(update_query, (new_commission, rep_num))
                 database_connection.commit()
                 print(f"Commission for rep {rep_num} updated to {new_commission}.")
