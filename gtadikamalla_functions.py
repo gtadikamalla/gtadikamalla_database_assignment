@@ -72,56 +72,68 @@ zip char(5), balance decimal(8,2), credit_limit decimal(8,2), rep_num char(2),FO
 def insert_a_customer_record(database_connectiion):
     #Create a function that prompts the user for a rep number. 
     # If the result is not empty, display the first record.
-    try:
-        cursor=database_connectiion.cursor()
-        customer_num = input("Enter customer number: ")
-        select_query = """SELECT * FROM customer WHERE customer_num = ?"""
-        cursor.execute(select_query, (customer_num,))
-        result = cursor.fetchone()
-        if result:
-                print("Customer already exists with details:")
-                print("Customer Details are:", result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8])
-        else:
-                print("Customer not found. Enter new customer details:")
-                customer_name = input("Customer Name: ")
-                street = input("Street: ")
-                city = input("City: ")
-                state = input("State: ")
-                zip_code = input("ZIP Code: ")
-                balance = float(input("Balance: "))
-                credit_limit = float(input("Credit Limit: "))
-                rep_num = input("Rep Number: ")
+    while True:
+        try:
+            cursor=database_connectiion.cursor()
+            customer_num = input("Enter customer number: ")
 
-                insert_query = """
-                INSERT INTO customer (customer_num, customer_name, street, city, state, zip, balance, credit_limit, rep_num)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """
-            
-                cursor.execute(insert_query, (customer_num, customer_name, street, city, state, zip_code, balance, credit_limit, rep_num))
-                
-                # Commit the changes
-                database_connectiion.commit()
-                print("New customer record inserted successfully.")
-    
-    except sqlite3.Error as e:
-        print(e)
-    pass
+            if customer_num.isdigit():
+                select_query = """SELECT * FROM customer WHERE customer_num = ?"""
+                cursor.execute(select_query, (customer_num,))
+                result = cursor.fetchone()
+                if result:
+                        print("Customer already exists with details:")
+                        print("Customer Details are:", result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8])
+                else:
+                        print("Customer not found. Enter new customer details:")
+                        customer_name = input("Customer Name: ")
+                        street = input("Street: ")
+                        city = input("City: ")
+                        state = input("State: ")
+                        zip_code = input("ZIP Code: ")
+                        balance = float(input("Balance: "))
+                        credit_limit = float(input("Credit Limit: "))
+                        rep_num = input("Rep Number: ")
+
+                        insert_query = """
+                        INSERT INTO customer (customer_num, customer_name, street, city, state, zip, balance, credit_limit, rep_num)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """
+                    
+                        cursor.execute(insert_query, (customer_num, customer_name, street, city, state, zip_code, balance, credit_limit, rep_num))
+                        
+                        # Commit the changes
+                        database_connectiion.commit()
+                        print("New customer record inserted successfully.")
+                        break
+            else:
+                print('Invalid input.')
+        
+        except sqlite3.Error as e:
+            print(e)
+        pass
 
 def query_rep_table(database_connection):
     #Create a function that prompts the user for a rep number. 
     # If the result is not empty, display the first record.
-    rep_num=input('Enter your rep number:')
-    try:
-        cursor=database_connection.cursor()
-        select_query="""select * from rep where rep_num=?"""
-        cursor.execute(select_query,(rep_num,))
-        result=cursor.fetchone()
-        if result:
-            print(result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8])
+    while True:
+        rep_num=input('Enter your rep number:')
+        if rep_num:
+            try:
+                cursor=database_connection.cursor()
+                select_query="""select * from rep where rep_num=?"""
+                cursor.execute(select_query,(rep_num,))
+                result=cursor.fetchone()
+                if result:
+                    print(result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8])
+                    break
+                else:
+                    print(f'Given rep number is not found in table.')
+                    break
+            except sqlite3.Error as e:
+                print(e)
         else:
-            print(f'{rep_num} is not found in table.')
-    except sqlite3.Error as e:
-        print(e)   
+            print('Invalid input. Please enter valid input.')
     pass
 def update_rep_table(database_connection):
     #Create a function that prompts the user for a rep number.  
@@ -147,7 +159,7 @@ def update_rep_table(database_connection):
                 update_query = "UPDATE rep SET rate = ? WHERE rep_num = ?"
                 cursor.execute(update_query, (new_commission, rep_num))
                 database_connection.commit()
-                print(f"Commission for rep {rep_num} updated to {new_commission}.")
+                print(f"Commission rate for rep {rep_num} updated to {new_commission}.")
             else:
                 print("Error: Commission rate must be between 0.0 and 0.20.")
         
@@ -162,31 +174,35 @@ def delete_customer_record(database_connection):
     # Create a function that prompts the user for a customer number.  
     # if the customer number exists, confirm for deletion and 
     # then and delete then delete that customer 
-    try:
-        cursor = database_connection.cursor()
-        customer_num = input("Enter the customer number to delete: ")
+    while True:
+        try:
+            cursor = database_connection.cursor()
+            customer_num = input("Enter the customer number to delete: ")
+            if customer_num.isdigit():
+                select_query = "SELECT * FROM customer WHERE customer_num = ?"
+                cursor.execute(select_query, (customer_num,))
+                result = cursor.fetchone()
+                
+                if result:
+                    print("Customer Details:", result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8])
+                
+                    confirm = input("Are you sure you want to delete this customer? (yes/no): ")
+                    if confirm.lower() == 'yes':
 
-        select_query = "SELECT * FROM customer WHERE customer_num = ?"
-        cursor.execute(select_query, (customer_num,))
-        result = cursor.fetchone()
-        
-        if result:
-            print("Customer Details:", result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8])
-        
-            confirm = input("Are you sure you want to delete this customer? (yes/no): ")
-            if confirm.lower() == 'yes':
-
-                delete_query = "DELETE FROM customer WHERE customer_num = ?"
-                cursor.execute(delete_query, (customer_num,))
-                database_connection.commit()
-                print(f"Customer {customer_num} has been deleted.")
+                        delete_query = "DELETE FROM customer WHERE customer_num = ?"
+                        cursor.execute(delete_query, (customer_num,))
+                        database_connection.commit()
+                        print(f"Customer {customer_num} has been deleted.")
+                        break
+                    else:
+                        print("Deletion canceled.")
+                else:
+                    print("No customer found with the provided customer number.")
             else:
-                print("Deletion canceled.")
-        else:
-            print("No customer found with the provided customer number.")
+                print('Invalid input, valid input')
 
-    except sqlite3.Error as e:
-        print("Database error:", e)
+        except sqlite3.Error as e:
+            print("Database error:", e)
     pass
 def delete_database(file_name, database_connection):
     # Create a function that deletes the database.  Verify that the file exists. 

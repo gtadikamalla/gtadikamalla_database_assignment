@@ -13,23 +13,36 @@ while True:
             X to delete the database
             Q to quit the application
             """
-    choice = input(prompt)
+    print(prompt)
+    choice = input('Enter your choice:')
     if choice in '':
         print('Input should not be empty.')
     elif choice in 'Bb':
-        file_name = input('Enter the database file name: ')
-        connection = functions.create_database_file(file_name)
+        while True:
+            file_name = input('Enter the database file name: ')
+            if file_name.endswith('.db'):
+                connection = functions.create_database_file(file_name)
+                break
+                
+            else:
+                print('Please enter valid input.')
+                pass
+            
     elif choice in 'Pp':
         #check if the connection exists 
         #call functions.create_rep_table with the connection
         if connection:
             functions.create_rep_table(connection)
+        else:
+            print('No connection found.')
         pass
     elif choice in 'Ss':
         #check if the connection exists 
         #call functions.create_customer_table with the connection
         if connection:
             functions.create_customer_table(connection)
+        else:
+            print('No connection found.')
         pass
     elif choice in 'Ii':
         #check if the connection exists 
@@ -37,24 +50,32 @@ while True:
         #in that function, prompt the user for 
         if connection:
             functions.insert_a_customer_record(connection)
+        else:
+            print('No connection found.')
         pass
     elif choice in 'Rr':
         #check if the connection exists 
         #call functions.query_rep with the connection
         if connection:
             functions.query_rep_table(connection)
+        else:
+            print('No connection found.')
         pass
     elif choice in 'Uu':
        #check if the connection exists 
         #call functions.update_rep with the connection
         if connection:
             functions.update_rep_table(connection)
+        else:
+            print('No connection found.')
         pass
     elif choice in 'Dd':
         #check if the connection exists 
         #call functions.delete_a_customer with the connection
         if connection:
             functions.delete_customer_record(connection)
+        else:
+            print('No connection found.')
 
         pass
     elif choice in 'Xx':
@@ -63,6 +84,8 @@ while True:
         if connection:
             file_name=input('Enter the database file name to delete:')
             functions.delete_database(file_name,connection)
+        else:
+            print('No connection found.')
         pass
 
     elif choice in 'Qq':
@@ -72,7 +95,8 @@ while True:
         pass
     else:
         #process the other choices
-        break
+        print('Invalid Input. Please enter valid input.')
+        
 
 
     
